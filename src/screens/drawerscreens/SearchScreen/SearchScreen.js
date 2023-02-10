@@ -11,7 +11,8 @@ import { AuthContext } from '../../../context/AuthContext';
 
 import axios from 'axios';
 import Dialog from "react-native-dialog";
-import SelectDropdown from 'react-native-select-dropdown';
+//import SelectDropdown from 'react-native-select-dropdown';
+import { SelectList } from 'react-native-dropdown-select-list';
 
 
 
@@ -33,7 +34,7 @@ const SearchScreen = () => {
     const prenom = userInfo[0].prenom;
 
     
-    const [data, setData] = useState([]);
+    //const [data, setData] = useState([]);
 
     const [cel, setCel] = useState('');
     
@@ -104,55 +105,68 @@ const SearchScreen = () => {
 
 
 
-    //const countries = ["Egypt", "Canada", "Australia", "Ireland"];
 
-    const [dataSource, setDataSource] = useState([]);
-    // const Formule = () => {
-    //     fetch('http://ftp.epheynix.com/api/selectformules.php')
-    //         .then((response) => response.json())
-    //         .then((responseJson) => {
-    //             setDataSource(responseJson.data);
-    //             //console.log(responseJson.data);
+    const [selected, setSelected] = useState("");
+    const [data,setData] = useState([]);
+    
+    
+    // const selectFormules = () => {
+
+    //     axios
+    //         .post('http://ftp.epheynix.com/api/selection_liste_formules.php')
+    //         .then((response) => {
+    //             let dataSource = response.data.map((item) => {
+    //                 return {key: item.id, value: item.fname}
+    //             })
+    //             setData(dataSource);
+
+    //             //setDataSource(response.data);
+    //             console.log(dataSource);
+    //             alert(dataSource);
     //             setIsLoading(false) ;
+
     //         })
     //         .catch((error) => {
     //             console.error(error);
     //         });
+        
     // }
 
-    const selectFormules = () => {
+
+    
+
+    
+
+
+    useEffect(()=>{
+        // selectFormules();
+        // setIsLoading(true);
+        //logoutHandle();
 
         axios
-            .post('http://ftp.epheynix.com/api/selectformules.php')
+            .get('http://ftp.epheynix.com/api/selection_liste_formules.php')
             .then((response) => {
+                
+                let dataSource = response.data.map((item) => {
+                    return {key: item.id, value: item.fname}
+                  });                
+                
+                setData(dataSource);
 
-                setDataSource(response.data);
-                console.log(response.data);
-                setIsLoading(false) ;
+                //setDataSource(response.data);
+                console.log(dataSource);
+                alert(dataSource);
+                setIsLoading(false);
 
             })
             .catch((error) => {
                 console.error(error);
             });
+
         
-    }
-
-
-
-
-
-
-
-
-
-
-    useEffect(()=>{
-        //selectFormules();
-        setIsLoading(true);
-        selectFormules();
-        //logoutHandle();        
     }, []);
 
+    
      
 
     //Navigation
@@ -180,15 +194,15 @@ const SearchScreen = () => {
     };
 
 
-    if(isLoading){
+    // if(isLoading){
 
-        return(
-            <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
-                <ActivityIndicator size={'large'} color='#649c15' />
-            </View>
-        )
+    //     return(
+    //         <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+    //             <ActivityIndicator size={'large'} color='#649c15' />
+    //         </View>
+    //     )
 
-    }
+    // }
 
 
     
@@ -327,31 +341,14 @@ const SearchScreen = () => {
                     <View style={{}}>
                         <View style={{marginBottom:50}}>
                             <Text style={{color:'#649c15', fontSize:18, fontWeight:'bold', alignSelf:'center', marginBottom:5}}>Sélectionner une formule :</Text>
-                            {/* <TextInput
-                                style={{borderColor:'#649c15', padding:5, borderStyle:'solid', color:'#649c15', fontSize:25, fontWeight:'bold', borderRadius:5, borderWidth:2}}
-                                autoCapitalize='characters'
-                                keyboardType='name-phone-pad'
-                                value={cel}
-                                //setValue={setcel}
-                                onChangeText={(text)=>setCel(text)}
-                            /> */}
-
-                        <SelectDropdown
-                            data={selectFormules}
-                            onSelect={(selectedItem, index) => {
-                                console.log(selectedItem, index)
-                            }}
-                            buttonTextAfterSelection={(selectedItem, index) => {
-                                // text represented after item is selected
-                                // if data array is an array of objects then return selectedItem.property to render after item is selected
-                                return selectedItem
-                            }}
-                            rowTextForSelection={(item, index) => {
-                                // text represented for each item in dropdown
-                                // if data array is an array of objects then return item.property to represent item in dropdown
-                                return item
-                            }}
-                        />
+                            
+                            {/* CHAMP SELECT */}
+                            <SelectList
+                                setSelected={setSelected}
+                                data={data} 
+                                onSelect={() => alert(selected)} 
+                            />
+                        
 
                             <TouchableOpacity style={[styles.button]} >
                                 <View style={{}}>

@@ -279,46 +279,11 @@ const DashBoardScreen = () => {
 
                 }}>
                     <View style={{alignItems:'center'}} >
-                    <Image style={{ width:'100%',height:'100%' }}
-                            resizeMode="contain"
-                            source={require('../../../assets/images/Pub2.jpg')}
-                            />
+                    {/* ETAT STATISTIQUE DES ACTIVITES DU CLIENT */}
                     </View>
                    
                 </View>
-                {/* END MEDIA */}
-
-
-                {/* FORMULES */}
-                <View style={{
-                    //flexDirection:'row',
-                    alignSelf:'center',
-                    //justifyContent:'space-between',
-                    width:'95%',
-                    //height:300,
-                    padding:5,
-                    margin:5,
-                    borderWidth:1,
-                    borderColor:'#FFFFFF',
-                    backgroundColor:'#FFFFFF',
-                    shadowRadius:3,
-                    shadowOffset:{width:3, height:3},
-                    shadowColor:'#000000',
-                    elevation:5,
-
-
-                }}>
-                    <View style={{alignItems:'center'}} >
-                        <Text style={{fontSize:18, fontWeight:'bold', color:'#000000'}}>FORMULES</Text>
-                    </View>
-
-                    <View>
-                        {/* <FlatList /> */}
-                        <Text style={{fontSize:18, fontWeight:'bold', color:'#000000'}}></Text>
-                    </View>
-                   
-                </View>
-
+                {/* END MEDIA */}               
 
 
             </ScrollView>

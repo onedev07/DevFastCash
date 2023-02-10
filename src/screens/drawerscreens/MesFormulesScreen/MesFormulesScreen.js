@@ -27,49 +27,27 @@ import { AuthContext } from '../../../context/AuthContext';
 
 
 
-//FLATLISTE
-const DATA = [
-    {
-      id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-      title: "First Item",
-    },
-    {
-      id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-      title: "Second Item",
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      title: "Third Item",
-    },
-  ];
-  
-  const Item = ({ item, onPress, backgroundColor, textColor }) => (
-    <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
-      <Text style={[styles.title, textColor]}>{item.title}</Text>
-    </TouchableOpacity>
-  );
+
 
 
 
 
 const MesFormulesScreen = () => {
-    
 
-    const {height} = useWindowDimensions();
+
+    const { height } = useWindowDimensions();
     const navigation = useNavigation();
-    //const route = useRoute();
 
-    //Afficher info Adhérent
-    //const {code_adherent, name, prenom} = route.params;
 
-    const {userInfo} = useContext(AuthContext);
+
+    const { userInfo } = useContext(AuthContext);
 
     const code = userInfo[0].code;
     const nom = userInfo[0].nom;
     const prenom = userInfo[0].prenom;
 
 
-    //Navigation
+    //NAVIGATION
     const GoToDashBoard = () => {
         //console.warn("forgotPassword");
         navigation.navigate("DashBoard");
@@ -94,10 +72,6 @@ const MesFormulesScreen = () => {
     };
 
 
-
-
-
-
     //Deconnexion
     const {logout} = useContext(AuthContext);
 
@@ -111,6 +85,8 @@ const MesFormulesScreen = () => {
         setVisible(true);
     };
 
+
+
     //Paramètres du logout
     const logoutHandle = (userInfo) => {
         logout(userInfo);
@@ -119,161 +95,156 @@ const MesFormulesScreen = () => {
 
 
 
-    const [data, setData] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
 
-    const [dataInfo, setDataInfo] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
-    
-//Infos Profile
-const dataformule = ()  => {
-    axios
-    .post('http://ftp.epheynix.com/api/formules.php')
-    .then((response) => {
-
-        let dataInfo = response.data;
-        setDataInfo(dataInfo);
-        setIsLoading(false) ;
-
-        // setCel(profileInfo[0].cel);
-        // setTel(profileInfo[0].tel);
-        // setEmail(profileInfo[0].email);
-        // setPsswd(profileInfo[0].psswd);
-        // setBp(profileInfo[0].bp);
-        // setAdresse(profileInfo[0].adresse);
-        // setCountry_id(profileInfo[0].country_id);
-        // setVille(profileInfo[0].ville);
-        // setCommune(profileInfo[0].commune);
-
-        //console.log(profileInfo);
-
-    }).catch((err) => {
-        console.log(err);
-    });
-    //setIsLoading(true);
-};
+    const [dataSource, setDataSource] = useState([]);
 
 
-useEffect(()=>{
-    dataformule();
-    setIsLoading(true);
-    logoutHandle();
-}, []);
+    //FlatListe RENDER ITEM
+    const renderItem = ({ item }) => {
+        return (
+            <TouchableOpacity style={styles.item}>
+                <View style={{margin:10}}>
+                    <Text style={{ color: '#000000', fontSize: 20, fontWeight: 'bold' }}>ID souscription:</Text> 
+                    <Text style={{ color: '#000000', fontSize: 20, fontWeight: 'bold' }}>Formule:</Text>                   
+                    <Text style={{ color: '#000000', fontSize: 20, fontWeight: 'bold' }}>Montant TTC:</Text>  
+                    <Text style={{ color: '#000000', fontSize: 20, fontWeight: 'bold' }}>Code du parrain:</Text>
+                </View>
+                <View style={{margin:10}}>
+                    <Text style={{ color: '#649c15', fontSize: 20, fontWeight: 'bold' }}>{item.id}</Text>
+                    <Text style={{ color: '#649c15', fontSize: 20, fontWeight: 'bold' }}>{item.formule_id}</Text>
+                    <Text style={{ color: '#649c15', fontSize: 20, fontWeight: 'bold' }}>{item.amount} FCFA</Text>  
+                    <Text style={{ color: '#649c15', fontSize: 20, fontWeight: 'bold' }}>{item.code_parrain}</Text>
+                </View>
+                
+                
+            </TouchableOpacity>
+        )
+    };
+
+    const DisplayData = () => {
+        axios
+        .post('http://ftp.epheynix.com/api/mes_formules.php',
+            JSON.stringify({
+                code: code,
+            })
+        )
+        .then((response) => {
+            setDataSource(response.data);
+            console.log(response.data);
+            setIsLoading(false) ; 
+      
+
+        }).catch((err) => {
+            console.log(err);
+        });
+        
+
+    };
+
+
+    useEffect(() => {
+        DisplayData();
+        setIsLoading(true);
+        //logoutHandle();
+    }, []);
 
 
 
-if(isLoading){
 
-    return(
-        <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
-            <ActivityIndicator size={'large'} color='#649c15' />
-        </View>
-    )
-    
-}
+    if(isLoading){
 
+        return(
+            <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+                <ActivityIndicator size={'large'} color='#649c15' />
+            </View>
+        )
 
-
-//FlatListe
-const [selectedId, setSelectedId] = useState(null);
-
-const renderItem = ({ item }) => {
-const backgroundColor = item.id === selectedId ? "#6e3b6e" : "#f9c2ff";
-const color = item.id === selectedId ? 'white' : 'black';
-
-return (
-    <Item
-      item={item}
-      onPress={() => setSelectedId(item.id)}
-      backgroundColor={{ backgroundColor }}
-      textColor={{ color }}
-    />
-  );
-};
+    }
 
 
-    
 
     return (
-        
-        <View style={{flex:1}}>
-        
+
+        <View style={{ flex: 1 }}>
+
             {/* HEADER */}
             <View style={{
                 //flex:1,
-                flexDirection:'column',
-                backgroundColor:'#F7F7F0',
-                width:'100%',
+                flexDirection: 'column',
+                backgroundColor: '#F7F7F0',
+                width: '100%',
                 height: 100,
             }}>
                 {/* ENTETE */}
                 <View style={{
-                    alignItems:'center',
-                    padding:5
-                    }}>
-                    <Text style={{fontSize:22, fontWeight:'bold', color:'#000000'}}>Mes formules</Text>
+                    alignItems: 'center',
+                    padding: 5
+                }}>
+                    <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#000000' }}>MES FORMULES SOUSCRITES</Text>
                 </View>
                 {/* END ENTETE */}
-                
+
                 {/* ADHERENT */}
                 <View style={{
-                    flexDirection:'row',
+                    flexDirection: 'row',
                     justifyContent: 'space-between',
-                    alignItems:'center',
-                    paddingVertical:10,
-                    paddingHorizontal:5,
+                    alignItems: 'center',
+                    paddingVertical: 10,
+                    paddingHorizontal: 5,
                     backgroundColor: '#649c15',//Jaune--- //'#3366FF',//Bleu
-                    border:2,
+                    border: 2,
                     //shadowOpacity: 0.1,
-                    shadowRadius:3,
-                    shadowOffset:{width:3, height:3},
-                    shadowColor:'#000000',
-                    elevation:5,
+                    shadowRadius: 3,
+                    shadowOffset: { width: 3, height: 3 },
+                    shadowColor: '#000000',
+                    elevation: 5,
 
 
                 }}>
 
-                    
+
                     <View style={{
 
                     }}>
-                        <Image style={{ width:60,height:60 }}
+                        <Image style={{ width: 60, height: 60 }}
                             resizeMode="contain"
                             source={require('../../../../assets/images/icons/user2.png')}
-                            onPress={() => {alert('click')}}
+                            onPress={() => { alert('click') }}
                         />
                     </View>
 
-                    <View style={{padding:0, color:'white'}}>
-                        <Text style={{color:'#FFFFFF', fontSize:20, fontWeight:'bold', textAlign:'center'}}>{nom} {prenom}</Text>
+                    <View style={{ padding: 0, color: 'white' }}>
+                        <Text style={{ color: '#FFFFFF', fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>{nom} {prenom}</Text>
                         <Text style={{
-                            color:'#ffcb00',
-                            justifyContent:'center',
-                            alignItems:'center',
-                            fontWeight:'bold',
-                            fontSize:18,
-                            margin:0,
-                            paddingTop:5,
-                            borderTopWidth:1,
-                            borderColor:'#FFFFFF'
+                            color: '#ffcb00',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            fontWeight: 'bold',
+                            fontSize: 18,
+                            margin: 0,
+                            paddingTop: 5,
+                            borderTopWidth: 1,
+                            borderColor: '#FFFFFF'
                         }}>
                             Code: {code}
                         </Text>
                     </View>
-                    
+
 
                     <View style={{
-                        
-                        alignItems:'center',
-                        justifyContent:'center',
+
+                        alignItems: 'center',
+                        justifyContent: 'center',
                     }}>
 
                         <TouchableOpacity onPress={() => {showDialog()}}>
 
-                            <Image style={{ width:30,height:30 }}
+                            <Image style={{ width: 30, height: 30 }}
                                 resizeMode="contain"
                                 source={require('../../../../assets/images/icons/logout1.png')}
-                                //onPress={() => {alert('click')}}
+                                //onPress={() => { alert('click') }}
                             />
 
                         </TouchableOpacity>
@@ -288,241 +259,238 @@ return (
                             <Dialog.Button label="Non" onPress={handleDelete} />
                         </Dialog.Container>
 
-                        
-                        
+
+
                     </View>
 
                 </View>
                 {/* END ADHERENT */}
-                         
+
 
             </View>
             {/* END HEADER */}
 
-            <ScrollView showsVerticalScrollIndicator={false} style={{marginTop:30}} >
-                      
+
+            {/* MES FORMULES */}
+            <View style={{
+                //flex:1,
+                //flexDirection:'column',
+                //flexDirection:'row',
+                alignSelf: 'center',
+                //justifyContent:'space-between',
+                width: '95%',
+                height: 460,
+                padding: 5,
+                marginTop: 30,
+                borderWidth: 1,
+                borderColor: '#FFFFFF',
+                backgroundColor: '#FFFFFF',
+                shadowRadius: 3,
+                shadowOffset: { width: 3, height: 3 },
+                shadowColor: '#000000',
+                elevation: 5,
+
+            }}>
+
+                {/* CONTENU  FORMULES */}
+                <View style={{ margin: 0 }} >
+
+                    {/* LISTE DES FORMULES */}
+                    <FlatList
+                        data={dataSource}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.id}
+                    />
+                    {/* END LISTE DES FORMULES */}
 
 
-                {/* MES FORMULES */}            
-                <View style={{
-                    //flexDirection:'row',
-                    //flexDirection:'row',
-                    alignSelf:'center',
-                    //justifyContent:'space-between',
-                    width:'95%',
-                    height:380,
-                    padding:5,
-                    margin:0,
-                    borderWidth:1,
-                    borderColor:'#FFFFFF',
-                    backgroundColor:'#FFFFFF',
-                    shadowRadius:3,
-                    shadowOffset:{width:3, height:3},
-                    shadowColor:'#000000',
-                    elevation:5,
-
-                }}>
-
-                    {/* CONTENU MES FORMULES */}
-                    <View style={{alignItems:'center'}} >
-
-                    
-                    <ScrollView>
-                        {/* <FlatList
-                            data={DATA}
-                            renderItem={renderItem}
-                            keyExtractor={(item) => item.id}
-                            extraData={selectedId}
-                        /> */}
-                    </ScrollView>
-                    
-                   
-                    </View>
-                    {/* END CONTENU FORMULES */}
-                   
                 </View>
-                {/* END FORMULES */}
+                {/* END CONTENU FORMULES */}
 
-                
+            </View>
+            {/* END FORMULES */}
 
 
 
-            </ScrollView>
 
-            
-           
 
-            
+
+
             {/* FOOTER MENU */}
             <View style={{
-                flex:1,
-                flexDirection:'column',
-                backgroundColor:'red'
-            }}>                
+                flex: 1,
+                flexDirection: 'column',
+                backgroundColor: 'red'
+            }}>
                 <View style={{
-                    position:'absolute',
-                    alignSelf:'center',
-                    backgroundColor:'#f4f4f4',
-                    width:70,
-                    height:70,
-                    borderRadius:35,
-                    bottom:35,
-                    zIndex:10
+                    position: 'absolute',
+                    alignSelf: 'center',
+                    backgroundColor: '#f4f4f4',
+                    width: 70,
+                    height: 70,
+                    borderRadius: 35,
+                    bottom: 35,
+                    zIndex: 10
                 }}>
                     <TouchableWithoutFeedback onPress={GoToFormules}>
                         <View style={[styles.buttonfloat, styles.actionBtn]}>
-                            <Image style={{ width:80,height:60 }}
-                            resizeMode="contain"
-                            source={require('../../../../assets/images/icons/add1.png')}
+                            <Image style={{ width: 80, height: 60 }}
+                                resizeMode="contain"
+                                source={require('../../../../assets/images/icons/add1.png')}
                             />
                         </View>
                     </TouchableWithoutFeedback>
                 </View>
-            
-            <View style={{
-                position:'absolute',
-                backgroundColor:'#649c15',//Violet
-                border:2,
-                radius:3,
-                shadowOpacity: 0.3,
-                shadowRadius:3,
-                shadowOffset:{width:3, height:3},
-                x:0,
-                y:0,
-                style:{marginVertical:5},
-                bottom:0,
-                width:'100%',
-                height:70,
-                flexDirection:'row',
-                justifyContent:'space-between',
-                paddingVertical:10,
-                paddingHorizontal:10,
-            }}>
 
                 <View style={{
-                    flexDirection:'column',
-                    alignItems:'center',
-                    justifyContent:'center'
+                    position: 'absolute',
+                    backgroundColor: '#649c15',//Violet
+                    border: 2,
+                    radius: 3,
+                    shadowOpacity: 0.3,
+                    shadowRadius: 3,
+                    shadowOffset: { width: 3, height: 3 },
+                    x: 0,
+                    y: 0,
+                    style: { marginVertical: 5 },
+                    bottom: 0,
+                    width: '100%',
+                    height: 70,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    paddingVertical: 10,
+                    paddingHorizontal: 10,
                 }}>
 
-                    <TouchableOpacity onPress={GoToDashBoard}>
+                    <View style={{
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
 
-                        <Image style={{ width:30,height:30 }}
-                            resizeMode="contain"
-                            source={require('../../../../assets/images/icons/home.png')}
-        
-                        />
+                        <TouchableOpacity onPress={GoToDashBoard}>
 
-                    </TouchableOpacity>
+                            <Image style={{ width: 30, height: 30 }}
+                                resizeMode="contain"
+                                source={require('../../../../assets/images/icons/home.png')}
 
-                    <Text style={{justifyContent:'center', alignItems:'center', color:'#FFFFFF'}}>Accueil</Text>
-                    
+                            />
+
+                        </TouchableOpacity>
+
+                        <Text style={{ justifyContent: 'center', alignItems: 'center', color: '#FFFFFF' }}>Accueil</Text>
+
+                    </View>
+
+
+                    <View style={{
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginRight: 50
+
+                    }}>
+
+                        <TouchableOpacity onPress={GoToMesFormules}>
+
+                            <Image style={{ width: 30, height: 30 }}
+                                resizeMode="contain"
+                                source={require('../../../../assets/images/icons/subscribe.png')}
+                            />
+
+                        </TouchableOpacity>
+
+                        <Text style={{ justifyContent: 'center', alignItems: 'center', color: '#FFFFFF' }}>Mes Formules</Text>
+
+                    </View>
+
+
+                    <View style={{
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
+
+                        <TouchableOpacity onPress={GoToProfile}>
+
+                            <Image style={{ width: 30, height: 30 }}
+                                resizeMode="contain"
+                                source={require('../../../../assets/images/icons/user1.png')}
+                            />
+
+                        </TouchableOpacity>
+
+                        <Text style={{ justifyContent: 'center', alignItems: 'center', color: '#FFFFFF' }}>Profile</Text>
+
+                    </View>
+
+                    <View style={{
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
+
+                        <TouchableOpacity onPress={GoToSearch}>
+
+                            <Image style={{ width: 30, height: 30 }}
+                                resizeMode="contain"
+                                source={require('../../../../assets/images/icons/search.png')}
+                            />
+
+                        </TouchableOpacity>
+
+                        <Text style={{ justifyContent: 'center', alignItems: 'center', color: '#FFFFFF' }}>Recherche</Text>
+
+                    </View>
+
+
                 </View>
-
-
-                <View style={{
-                    flexDirection:'column',
-                    alignItems:'center',
-                    justifyContent:'center',
-                    marginRight:50
-                    
-                }}>
-
-                    <TouchableOpacity onPress={GoToMesFormules}>
-
-                        <Image style={{ width:30,height:30 }}
-                            resizeMode="contain"
-                            source={require('../../../../assets/images/icons/subscribe.png')}
-                        />
-
-                    </TouchableOpacity>
-
-                    <Text style={{justifyContent:'center', alignItems:'center', color:'#FFFFFF'}}>Mes Formules</Text>
-                    
-                </View>
-
-
-                <View style={{
-                    flexDirection:'column',
-                    alignItems:'center',
-                    justifyContent:'center'
-                }}>
-
-                    <TouchableOpacity onPress={GoToProfile}>
-
-                        <Image style={{ width:30,height:30 }}
-                            resizeMode="contain"
-                            source={require('../../../../assets/images/icons/user1.png')}
-                        />
-
-                    </TouchableOpacity>
-
-                    <Text style={{justifyContent:'center', alignItems:'center', color:'#FFFFFF'}}>Profile</Text>
-                    
-                </View>
-
-                <View style={{
-                    flexDirection:'column',
-                    alignItems:'center',
-                    justifyContent:'center'
-                }}>
-
-                    <TouchableOpacity onPress={GoToSearch}>
-
-                        <Image style={{ width:30,height:30 }}
-                            resizeMode="contain"
-                            source={require('../../../../assets/images/icons/search.png')}
-                        />
-
-                    </TouchableOpacity>
-
-                    <Text style={{justifyContent:'center', alignItems:'center', color:'#FFFFFF'}}>Recherche</Text>
-                    
-                </View>
-
 
             </View>
 
+
+
         </View>
 
 
-            
-        </View>
-        
 
-        
-        
-    
-        
+
+
+
     );
+    
+
+    
 };
+
+
 
 const styles = StyleSheet.create({
     root: {
-      flex: 1,
-      //backgroundColor: '#FFFFFF',
+        flex: 1,
+        //backgroundColor: '#FFFFFF',
     },
 
     header: {
-        alignItems:'center',
-        flexDirection:'row',
+        alignItems: 'center',
+        flexDirection: 'row',
         margin: 5,
         height: 150,
         borderWidth: 1,
         borderRadius: 5,
         borderColor: '#FFFFFF',
-        
+
     },
     logo: {
         height: 80,
         width: 80,
-        marginBottom:10
+        marginBottom: 10
     },
 
     username: {
         width: '50%',
         margin: 10,
-      
+
     },
     headerText: {
         fontSize: 18,
@@ -545,27 +513,27 @@ const styles = StyleSheet.create({
     },
 
     indicateur: {
-        alignItems:'flex-start',
-        flexDirection:'row',        
+        alignItems: 'flex-start',
+        flexDirection: 'row',
         margin: 5,
         //height: 50,
-        
+
         borderRadius: 5,
         borderColor: '#FFFFFF',
-        borderWidth:2,
+        borderWidth: 2,
         backgroundColor: '#FFFFFF'
     },
 
     nb: {
         width: '80%',
-        flexDirection:'row',
+        flexDirection: 'row',
         margin: 5,
         //backgroundColor: 'yellow'
     },
 
     val: {
         width: '80%',
-        flexDirection:'row',
+        flexDirection: 'row',
         margin: 5,
     },
 
@@ -609,39 +577,50 @@ const styles = StyleSheet.create({
         marginLeft: 20
     },
 
-    buttonfloat:{
-        width:60,
-        height:60,
-        alignItems:'center',
-        justifyContent:'center',
-        shadowColor:'#0033FF',
+    buttonfloat: {
+        width: 60,
+        height: 60,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: '#0033FF',
         shadowOpacity: 0.1,
-        shadowOffset: {x: 2, y:0},
+        shadowOffset: { x: 2, y: 0 },
         shadowRadius: 2,
-        borderRadius:30,
-        position:'absolute',
-        bottom:20,
-        right:0,
-        top:5,
-        left:5,
+        borderRadius: 30,
+        position: 'absolute',
+        bottom: 20,
+        right: 0,
+        top: 5,
+        left: 5,
         shadowOpacity: 0.5,
     },
-    actionBtn:{
-        backgroundColor:'#FFFFFF',
-        textShadowOffset:{width:5, height:5},
-        textShadowRadius:10,
-        borderWidth:2,
-        borderColor:'#FFFFFF'
+    actionBtn: {
+        backgroundColor: '#FFFFFF',
+        textShadowOffset: { width: 5, height: 5 },
+        textShadowRadius: 10,
+        borderWidth: 2,
+        borderColor: '#FFFFFF'
     },
     item: {
-        padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
-      },
-      title: {
-        fontSize: 32,
-      },
+        flexDirection:'row',
+        justifyContent:'space-between',
+        width: '100%',
+        //alignItems:'',
+        //height: 120,
+        //padding: 20,
+        marginVertical: 5,
+        //marginHorizontal: 5,
+        borderStyle: 'solid',
+        borderWidth:1,
+        borderColor: '#649c15',
+        borderRadius: 5,
+        
+        //backgroundColor: '#649c15'
+
+
+    },
     
+
 });
 
 

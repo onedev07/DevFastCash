@@ -109,15 +109,16 @@ const FormulesScreen = () => {
                     />
                 </View>
                 <View style={styles.title}>
-                    <Text style={{ color: '#FFFFFF', fontSize: 25, fontWeight: 'bold' }}>{item.fnom}</Text>
+                    <Text style={{ color: '#649c15', fontSize: 25, fontWeight: 'bold' }}>{item.fnom}</Text>                    
+                    <Text style={{ color: '#FCC700', fontSize: 20, fontWeight: 'bold' }}>{item.montant} FCFA</Text>                    
                 </View>
 
-                <View style={styles.montant}>
+                {/* <View style={styles.montant}>
                     <Text style={{ color: '#FFFFFF', fontSize: 16, fontWeight: 'bold' }}>Montant</Text>
                     <Text style={{ color: '#FFFF00', fontSize: 20, fontWeight: 'bold' }}>{item.montant} FCFA</Text>
-                </View>
+                </View> */}
 
-                <View style={styles.taxe}>
+                {/* <View style={styles.taxe}>
                     <Text style={{ color: '#FFFFFF', fontSize: 16, fontWeight: 'bold' }}>Taxe</Text>
                     <Text style={{ color: '#FFFF00', fontSize: 20, fontWeight: 'bold' }}>{item.taxe}</Text>
                 </View>
@@ -125,7 +126,7 @@ const FormulesScreen = () => {
                 <View style={styles.montant}>
                     <Text style={{ color: '#FFFFFF', fontSize: 16, fontWeight: 'bold' }}>Total</Text>
                     <Text style={{ color: '#FFFF00', fontSize: 20, fontWeight: 'bold' }}>{item.montant_total} FCFA</Text>
-                </View>
+                </View> */}
 
             </TouchableOpacity>
         )
@@ -599,34 +600,38 @@ const styles = StyleSheet.create({
     },
     item: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent:'flex-start',
         width: '100%',
         alignItems: 'center',
         height: 100,
-        // padding: 5,
+        //padding: 20,
         marginVertical: 5,
         //marginHorizontal: 5,
         borderStyle: 'solid',
-        //borderWidth:1,
-        borderColor: '#000000',
-        borderRadius: 10,
-        backgroundColor: '#649c15'
+        borderWidth:1,
+        borderColor: '#649c15',
+        borderRadius: 5,
+        backgroundColor: '#FFFFFF' //'#649c15'
 
 
     },
     title: {
         //marginLeft:5,
-
+        //flexDirection: 'column',
+        justifyContent: 'center',
+        marginLeft: 50,
+        
     },
-    montant: {
-        flexDirection: 'column',
-        alignItems: 'center'
-    },
-    taxe: {
-        flexDirection: 'column',
-        alignItems: 'center',
-        paddingRight: 30,
-    }
+    // montant: {
+    //     //flexDirection: 'column',
+    //     //alignItems: 'center',
+    //     paddingLeft:50
+    // },
+    // taxe: {
+    //     flexDirection: 'column',
+    //     alignItems: 'center',
+    //     paddingRight: 30,
+    // }
 
 });
 

@@ -324,7 +324,7 @@ const ProfileScreen = () => {
             </View>
             {/* END HEADER */}
 
-            <ScrollView showsVerticalScrollIndicator={false} style={{marginTop:0}} >
+            
 
                 {/* PROFILE */}            
                 <View style={{
@@ -348,7 +348,7 @@ const ProfileScreen = () => {
                 <ScrollView showsVerticalScrollIndicator={false}>
 
                     {/* CONTENU PROFILE */}
-                    <View style={{alignItems:'flex-start'}} >
+                    <View style={{alignItems:'flex-start', marginBottom:60}} >
                         <Text style={{color:'#649c15', fontSize:18, fontWeight:'bold'}}>Code :</Text>
                         <TextInput
                             style={styles.input}
@@ -472,7 +472,7 @@ const ProfileScreen = () => {
 
 
 
-            </ScrollView>
+           
 
             
            

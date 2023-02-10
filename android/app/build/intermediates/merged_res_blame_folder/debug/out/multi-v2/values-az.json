@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "E:\\CODE PROJET\\Dev_Project\\DevFastCash\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-az\\values-az.xml",
+            "outputFile": "C:\\DevFastCash\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-az\\values-az.xml",
             "map": [
                 {
                     "source": "C:\\Users\\HP\\.gradle\\caches\\transforms-3\\b5a8e99dac667ebea08e9f9757d3b404\\transformed\\core-1.7.0\\res\\values-az\\values-az.xml",

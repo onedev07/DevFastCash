@@ -30,7 +30,7 @@ const RegisterScreen = () => {
     
 
     //const [code, setCode] = useState('');
-    const [photo, setPhoto] = useState('');
+    //const [photo, setPhoto] = useState('');
     const [nom, setNom] = useState('');
     const [prenom, setPrenom] = useState('');
     const [cel, setCel] = useState('');
@@ -82,7 +82,7 @@ const RegisterScreen = () => {
                 'http://ftp.epheynix.com/api/register.php',
                 JSON.stringify({
                     code: code,
-                    photo: photo,
+                    //photo: photo,
                     nom: nom,
                     prenom: prenom,
                     cel: cel,
@@ -240,11 +240,11 @@ const RegisterScreen = () => {
                         onChangeText={(text)=>setCode(text)}
                     /> */}
 
-                    <TextInput
+                    {/* <TextInput
                         style={styles.input}
                         placeholder="Photo"
                         onChangeText={(text)=>setPhoto(text)}
-                    />
+                    /> */}
 
                     <TextInput
                         style={styles.input}

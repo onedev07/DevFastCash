@@ -105,7 +105,7 @@ const ValidationScreen = ({ route }) => {
     const { item, fnom, ftaxe, ftotal, code_parrain } = route.params;
 
 
-    //let montant_total = {ftotal};
+   
 
 
 
@@ -121,11 +121,11 @@ const ValidationScreen = ({ route }) => {
         amount: parseInt(ftotal),  //montant de la transaction
         currency: 'XOF',
         description: 'Test de paiement',
-        notify_url: 'http://ftp.epheynix.com/api/notification.php',   //adresse valide
+        notify_url: '', //'http://ftp.epheynix.com/api/notification.php',   //adresse valide
         return_url: '',   //adresse valide
         channels: 'MOBILE_MONEY', //'ALL'
         lang: 'fr',
-        metadata: code,
+        metadata: fnom, // Nom de la formule
         invoice_data: {
             "ID de la formule":item,
             "Nom de la formule":fnom,
@@ -134,10 +134,10 @@ const ValidationScreen = ({ route }) => {
         },
 
         // Champs APPLICATION
-        code:{code},
-        formule_id:{item},
-        code_parrain:{code_parrain},
-        status:'NO',
+        code:code, // Code de l'adhérent
+        formule_id:item,
+        code_parrain:code_parrain,
+        status:'',
 
         // les champs si dessous sont necessaires pour le paiement 
         // par carte bancaire
@@ -162,50 +162,25 @@ const ValidationScreen = ({ route }) => {
     };
 
     // //Sauvegarde des infos de paiement dans la BD
-    // const saveApiPayload = () => {
-    //     axios
-    //         .post(
-    //             'http://ftp.epheynix.com/api/savepayment.php',
-    //             JSON.stringify(apiPayload)
-    //         )
-    //         .then((response) => {
-    //             console.log(response.data);
-    //             setIsSubmit(false);
-    //             //Redirection vers l'écran de connexion (Login)
-    //             navigation.navigate('Login');
-    //         }).catch((err) => {
-    //             console.log(err);
-    //         });
-    // }
+    const saveApiPayload = () => {
+        axios
+            .post(
+                'http://ftp.epheynix.com/api/savepayment.php',
+                JSON.stringify(apiPayload)
+            )
+            .then((response) => {
+                console.log(response.data);
+               
+            }).catch((err) => {
+                console.log(err);
+            });
+    }
     
 
-    const getPaymentUrl = () => {
+    const getPaymentUrl = () => {        
 
         return new Promise(async (resolve, reject) => {
             try {
-
-                //SAUVEGARDE DES INFOS DE PAIEMENT DANS LA BD                
-                axios
-                    .post(
-                        'http://ftp.epheynix.com/api/savepayment.php',
-                        JSON.stringify(apiPayload)
-                    )
-                    .then((response) => {
-                        console.log(response.data);
-                        setIsSubmit(false);
-                        
-                        if(response.data == "success"){
-                            alert('Success de l\'enrégistrement des informations de paiements');
-                        }else{
-                            alert('Echec de l\'enrégistrement des informations de paiements');
-                            //Redirection vers l'écran de souscription (Subscribe)
-                            navigation.navigate('Subscribe');
-                        }
-                    }).catch((err) => {
-                        console.log(err);
-                    });
-
-                    
 
                 //CODE DU CHECKOUT
                 const fetch1 = await fetch(apiUrl, options);
@@ -413,13 +388,15 @@ const ValidationScreen = ({ route }) => {
                         </View>
 
                         <TouchableOpacity style={[styles.button]} 
-                            onPress={() => {
-                                getPaymentUrl().then((response) => {
+                            onPress={
+                                () => {
+                                    saveApiPayload()
+                                    getPaymentUrl().then((response) => {
                                     navigation.navigate('Guichet CinetPay', {
                                     url: response.data.payment_url,
                                     });
                                 });
-                                }}
+                                 }}
                         >
                         <View style={{}}>
                             <Text style={{

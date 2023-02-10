@@ -370,35 +370,31 @@ const SubscribeScreen = ({ route }) => {
                             />
 
 
-                        <TouchableOpacity style={[styles.button]} 
-                            onPress={()=>{verifCodeParrain()}}
-                        >
-                            <View style={{}}>
-                                <Text style={{
-                                    color: '#FFFFFF',
-                                    fontSize: 22,
-                                    //fontWeight:'bold',
-                                    margin: 5,
+                            <TouchableOpacity style={[styles.button]} 
+                                onPress={()=>{verifCodeParrain()}}
+                            >
+                                <View style={{}}>
+                                    <Text style={{
+                                        color: '#FFFFFF',
+                                        fontSize: 22,
+                                        //fontWeight:'bold',
+                                        margin: 5,
 
-                                }} >Valider</Text>
-                            </View>
-                        </TouchableOpacity>
+                                    }} >Valider</Text>
+                                </View>
+                            </TouchableOpacity>
 
                             
                         </View>
-
-                        
-
-
-                </ScrollView>
-
-
+                    
+                    </ScrollView>
+                </View>
+                {/* END CONTENU SOUSCRIRE */}
 
             </View>
-            {/* END CONTENU SOUSCRIRE */}
-
-        </View>
             {/* END SOUSCRIRE */ }
+
+        
 
 
 
